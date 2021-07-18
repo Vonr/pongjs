@@ -12,7 +12,7 @@ var clicking = false;
 var mouseY = -1;
 
 var difficulty = 0.62;
-var speedLimit = 0.02;
+var speedLimit = 0.013;
 
 function gameLoop() {
     setTimeout(function () {
@@ -116,14 +116,14 @@ function handleBall() {
         Math.abs(ball.y - playerY) < 1 / 8
     ) {
         ball.angle = (ball.y - playerY) * Math.PI * 2 * 1.8;
-        ball.speed *= 1.05;
+        ball.speed *= 1.02;
     } else if (
         Math.abs(ball.x - 19 / 20) < 1 / 100 &&
         Math.abs(ball.y - enemyY) < 1 / 8
     ) {
         ball.angle =
             2 * Math.PI - (ball.y - enemyY) * Math.PI * 2 * 1.8 + Math.PI;
-        ball.speed *= 1.05;
+        ball.speed *= 1.02;
     }
 
     ball.y = clamp(ball.y * height, width / 200, height - width / 200) / height;
