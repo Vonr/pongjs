@@ -6,13 +6,13 @@ var playerY = 0.5;
 var playerScore = 0;
 var enemyY = 0.5;
 var enemyScore = 0;
-var ball = { x: 0.5, y: 0.5, angle: 0, speed: 0.005 };
+var ball = { x: 0.5, y: 0.5, angle: 0, speed: 0.007 };
 var currentKey = -1;
 var clicking = false;
 var mouseY = -1;
 
-var difficulty = 0.62;
-var speedLimit = 0.013;
+var difficulty = 0.83;
+var speedLimit = 0.017;
 
 function gameLoop() {
     setTimeout(function () {
@@ -82,7 +82,7 @@ document.addEventListener("touchmove", (event) => {
 });
 
 function handleBall() {
-    ball.speed = Math.min(ball.speed, speedLimit);
+    ball.speed = Math.min(ball.speed * 1.0001, speedLimit);
 
     ball.x += ball.speed * Math.cos(ball.angle);
     ball.y += ball.speed * Math.sin(ball.angle);
@@ -115,15 +115,15 @@ function handleBall() {
         Math.abs(ball.x - 1 / 20) < 1 / 100 &&
         Math.abs(ball.y - playerY) < 1 / 8
     ) {
-        ball.angle = (ball.y - playerY) * Math.PI * 2 * 1.8;
-        ball.speed *= 1.02;
+        ball.angle = (ball.y - playerY) * Math.PI * 2 * 1.6;
+        ball.speed *= 1.01;
     } else if (
         Math.abs(ball.x - 19 / 20) < 1 / 100 &&
         Math.abs(ball.y - enemyY) < 1 / 8
     ) {
         ball.angle =
-            2 * Math.PI - (ball.y - enemyY) * Math.PI * 2 * 1.8 + Math.PI;
-        ball.speed *= 1.02;
+            2 * Math.PI - (ball.y - enemyY) * Math.PI * 2 * 1.6 + Math.PI;
+        ball.speed *= 1.01;
     }
 
     ball.y = clamp(ball.y * height, width / 200, height - width / 200) / height;
@@ -132,17 +132,17 @@ function handleBall() {
 function handleInput() {
     switch (currentKey) {
         case 38:
-            playerY -= 1 / 150;
+            playerY -= ((1 / 130) * ball.speed) / 0.007;
             break;
         case 40:
-            playerY += 1 / 150;
+            playerY += ((1 / 130) * ball.speed) / 0.007;
             break;
         case -1:
             if (clicking) {
                 if (mouseY > height / 2) {
-                    playerY += ((1 / 150) * ball.speed) / 0.005;
+                    playerY += ((1 / 130) * ball.speed) / 0.007;
                 } else {
-                    playerY -= ((1 / 150) * ball.speed) / 0.005;
+                    playerY -= ((1 / 130) * ball.speed) / 0.007;
                 }
             }
             break;
@@ -153,16 +153,16 @@ function handleEnemy() {
     if (ball.angle < Math.PI / 2 || ball.angle > (Math.PI * 3) / 2) {
         if (Math.random() > difficulty) return;
 
-        if (ball.y - enemyY > 1 / 10) {
-            enemyY += ((1 / 150) * ball.speed) / 0.005;
-        } else if (enemyY - ball.y > 1 / 10) {
-            enemyY -= ((1 / 150) * ball.speed) / 0.005;
+        if (ball.y - enemyY > 0.12) {
+            enemyY += ((1 / 130) * ball.speed) / 0.007;
+        } else if (enemyY - ball.y > 0.12) {
+            enemyY -= ((1 / 130) * ball.speed) / 0.007;
         }
     } else {
         if (0.5 - enemyY > 0.01) {
-            enemyY += ((1 / 150) * ball.speed) / 0.005;
+            enemyY += ((1 / 130) * ball.speed) / 0.007;
         } else if (enemyY - 0.5 > 0.01) {
-            enemyY -= ((1 / 150) * ball.speed) / 0.005;
+            enemyY -= ((1 / 130) * ball.speed) / 0.007;
         }
     }
 }
@@ -228,7 +228,11 @@ function render() {
         ball.y * height,
         width / 200
     );
-    ballObject.stroke = "white";
+
+    var red = ((ball.speed - 0.007) / (speedLimit - 0.007)) * 255;
+
+    ballObject.stroke = "rgb(" + red + ", 0, " + (255 - red) + ")";
+    ballObject.fill = "rgb(" + red + ", 0, " + (255 - red) + ")";
 
     // var ballInfo = two.makeText(ball.angle, ball.x * width, (ball.y + 0.1) * height, 'normal');
     // ballInfo.stroke = 'gray'
@@ -244,7 +248,7 @@ function resetBall() {
         Math.random() * 0.7 * Math.PI -
         1.4 * Math.PI +
         Math.floor(Math.random() * 2) * Math.PI;
-    ball.speed = 0.005;
+    ball.speed = 0.007;
 }
 
 function resetPaddles() {
