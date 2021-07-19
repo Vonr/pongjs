@@ -9,6 +9,7 @@ var enemyScore = 0;
 var ball = { x: 0.5, y: 0.5, angle: 0, speed: 0.007 };
 var currentKey = -1;
 var clicking = false;
+var paused = true;
 var mouseY = -1;
 
 var difficulty = 0.83;
@@ -18,6 +19,8 @@ function gameLoop() {
     setTimeout(function () {
         width = $(window).width();
         height = $(window).height();
+
+        if (paused) continue;
 
         handleBall();
         handleInput();
@@ -30,6 +33,7 @@ function gameLoop() {
 }
 
 document.addEventListener("keydown", (event) => {
+    paused = false;
     switch (event.keyCode) {
         case 38:
             currentKey = 38;
@@ -52,6 +56,7 @@ document.addEventListener("keyup", (event) => {
 });
 
 document.addEventListener("mousedown", (event) => {
+    paused = false;
     clicking = true;
     mouseY = event.offsetY;
 });
@@ -65,6 +70,7 @@ document.addEventListener("mousemove", (event) => {
 });
 
 document.addEventListener("touchstart", (event) => {
+    paused = false;
     clicking = true;
     mouseY = event.touches[0].pageY;
 });
@@ -254,6 +260,7 @@ function resetBall() {
 function resetPaddles() {
     playerY = 0.5;
     enemyY = 0.5;
+    paused = true
 }
 
 resetBall();
