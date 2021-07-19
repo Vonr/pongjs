@@ -20,12 +20,12 @@ function gameLoop() {
         width = $(window).width();
         height = $(window).height();
 
-        if (paused) continue;
-
-        handleBall();
-        handleInput();
-        handleEnemy();
-        clampPositions();
+        if (!paused) {
+            handleBall();
+            handleInput();
+            handleEnemy();
+            clampPositions();
+        }
         render();
 
         gameLoop();
@@ -260,7 +260,7 @@ function resetBall() {
 function resetPaddles() {
     playerY = 0.5;
     enemyY = 0.5;
-    paused = true
+    paused = true;
 }
 
 resetBall();
